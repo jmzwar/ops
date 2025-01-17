@@ -93,6 +93,7 @@ export const Address = ({
       enabled: isAddress(checkSumAddress ?? ""),
     },
   });
+
   const { data: ensAvatar } = useEnsAvatar({
     name: ens ? normalize(ens) : undefined,
     chainId: 1,
