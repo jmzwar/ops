@@ -27,6 +27,10 @@ const nextConfig = {
         protocol: "http",
         hostname: "**", // Allows all HTTP images (not recommended for production)
       },
+      {
+        protocol: "https",
+        hostname: "ops-nextjs.vercel.app",
+      },
     ],
   },
 };
