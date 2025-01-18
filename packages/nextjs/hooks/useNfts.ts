@@ -1,22 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 
+export interface Nft {
+  collection: string;
+  contract: string;
+  description: string;
+  display_animation_url: string | null;
+  display_image_url: string | null;
+  identifier: string | null;
+  image_url: string;
+  is_disabled: boolean;
+  is_nsfw: boolean;
+  metadata_url: string;
+  name: string;
+  opensea_url: string;
+  token_standard: string;
+  updated_at: string;
+}
+
 interface NftResponse {
-  nfts: Array<{
-    collection: string;
-    contract: string;
-    description: string;
-    display_animation_url: string | null;
-    display_image_url: string | null;
-    identifier: string | null;
-    image_url: string;
-    is_disabled: boolean;
-    is_nsfw: boolean;
-    metadata_url: string;
-    name: string;
-    opensea_url: string;
-    token_standard: string;
-    updated_at: string;
-  }>;
+  nfts: Array<Nft>;
 }
 
 export const useNfts = ({ chain, address }: { chain: string; address: string }) => {
