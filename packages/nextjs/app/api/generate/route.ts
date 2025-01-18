@@ -10,6 +10,17 @@ const openai = new OpenAI({
 
 const writeFile = promisify(fs.writeFile);
 
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGINS || "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { imageUrl } = await req.json();

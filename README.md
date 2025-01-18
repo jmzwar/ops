@@ -35,4 +35,5 @@ This project is a **Next.js** application that allows users to browse NFT images
 ```sh
 git clone https://github.com/jmzwar/ops.git
 cd ops
+yarn && yarn start
 ```
