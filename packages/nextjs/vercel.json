@@ -1,3 +1,9 @@
 {
-  "installCommand": "yarn install"
+  "installCommand": "yarn install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "https://ops-nextjs.vercel.app/$1"
+    }
+  ]
 }
