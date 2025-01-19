@@ -30,6 +30,7 @@
     "node": ">=18.18.0"
   },
   "dependencies": {
+    "formdata-node": "^6.0.3",
     "openai": "^4.79.1"
   }
 }

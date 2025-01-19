@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
+import { File } from "formdata-node";
 import OpenAI from "openai";
-import path from "path";
-import { promisify } from "util";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 
-const writeFile = promisify(fs.writeFile);
+export const config = {
+  runtime: "edge", // Keep Edge runtime
+};
 
 export async function OPTIONS() {
   return new Response(null, {
@@ -29,32 +29,37 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing imageUrl" }, { status: 400 });
     }
 
-    // Fetch the image as an ArrayBuffer (compatible with Node.js)
+    // Fetch image as an array buffer
     const response = await fetch(imageUrl);
     if (!response.ok) {
       return NextResponse.json({ error: "Failed to fetch image" }, { status: 400 });
     }
 
     const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
 
-    // Define a temporary file path
-    const tempFilePath = path.join("/tmp", "image.png");
-
-    // Write the image buffer to a file
-    await writeFile(tempFilePath, buffer);
+    const file = new File([arrayBuffer], "image.png", { type: "image/png" });
 
     // Send the image to OpenAI API
     const variationResponse = await openai.images.createVariation({
       model: "dall-e-2",
-      image: fs.createReadStream(tempFilePath), // Read from file
+      image: file,
       n: 1,
       size: "1024x1024",
     });
 
     return NextResponse.json(variationResponse, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+
+    let errorMessage = "Unknown error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === "string") {
+      errorMessage = error;
+    } else if (typeof error === "object" && error !== null && "message" in error) {
+      errorMessage = String(error.message);
+    }
+
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
